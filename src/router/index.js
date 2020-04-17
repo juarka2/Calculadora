@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
+
 Vue.use(VueRouter)
 
   const routes = [
@@ -9,6 +10,11 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/calculadora',
+    name: 'Calculadora',
+    component: () => import(/* webpackChunkName: "boton" */ '../views/Calculadora.vue')
   },
   {
     path: '/about',
