@@ -13,9 +13,21 @@ export default {
     name: 'Boton',
     props:['value','vertical','size'],
     data(){
-        return{ spanX: 1, spanY:1 
+        return{ spanX: 1, spanY:1, vert:this.vertical
         }
         
+    },
+    watch:{
+        vertical(newVal){
+            
+            this.vert = newVal;
+            if(this.vert){
+            this.setHeight();
+        }
+        else{
+            this.setWidth()
+        }
+        }
     },
     created(){
             if(this.vertical){
@@ -43,14 +55,26 @@ export default {
     methods:{
        
         setWidth(){
-            this.spanX=this.size;
+            if(this.size){
+
+                this.spanX=this.size;
+            }
+            else{
+                this.spanX=1;
+            }
             this.spanY=1;
             
 
         },
         setHeight(){
+            if(this.size){
 
-            this.spanY=this.size;
+                
+                this.spanY=this.size;
+            }
+            else{
+                this.spanY=1;
+            }
             this.spanX=1;
             
 

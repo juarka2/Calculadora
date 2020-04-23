@@ -40,6 +40,8 @@ describe('Boton.vue', () => {
   it('spanX and spanY are >= 0', () => {
     
     const wrapper = shallowMount(Boton);
+    console.log(wrapper.vm.spanX, "spanX");
+    console.log(wrapper.vm.spanY, 'spanY');
     expect((wrapper.vm.spanX>=0&&wrapper.vm.spanY>=0)).toBe(true);
   });
   it('spanX and spanY are integer', () => {
