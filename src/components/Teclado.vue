@@ -5,17 +5,165 @@
     <div
       id="tecl"
       class="flex-teclado"
-      v-bind:style="{ width: size * 4 * 45 + 20 + 'px' }"
+      v-bind:style="{ width: 4 * (size * 45 + 2 * (size - 1)) + 20 + 'px' }"
     >
       <Boton
         class="btn"
-        :id="'element' + item"
-        :ref="'element' + item"
         v-bind:size="size"
         v-bind:vertical="vertical"
-        v-for="(item, index) in values"
-        :key="index"
-        v-bind:value="item"
+        ref="btn1"
+        id="element1"
+        v-bind:value="1"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn2"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element2"
+        v-bind:value="2"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn3"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element3"
+        v-bind:value="3"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn+"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element+"
+        value="+"
+        :disabled="disable.disablePlus"
+        :class="{ highlight: operador == '+' }"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn4"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element4"
+        v-bind:value="4"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn5"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element5"
+        v-bind:value="5"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn6"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element6"
+        v-bind:value="6"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn-"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element-"
+        value="-"
+        :disabled="disable.disableMinus"
+        :class="{ highlight: operador == '-' }"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn7"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element7"
+        v-bind:value="7"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn8"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element8"
+        v-bind:value="8"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn9"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element9"
+        v-bind:value="9"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn*"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element*"
+        value="*"
+        :disabled="disable.disableBy"
+        :class="{ highlight: operador == '*' }"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn0"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element0"
+        v-bind:value="0"
+        @clicked="onClickBoton"
+      >
+      </Boton>
+      <Boton
+        class="btnEqual"
+        ref="btn="
+        v-bind:size="size + 1"
+        v-bind:vertical="vertical"
+        id="element="
+        value="="
+        :disabled="disable.disableEqual"
+        v-bind:style="{ width: size * 2 * 45 + 'px' }"
+        @clicked="calcular"
+      >
+      </Boton>
+      <Boton
+        class="btn"
+        ref="btn/"
+        v-bind:size="size"
+        v-bind:vertical="vertical"
+        id="element/"
+        value="/"
+        :disabled="disable.disableDivide"
+        :class="{ highlight: operador == '/' }"
         @clicked="onClickBoton"
       >
       </Boton>
@@ -32,53 +180,49 @@ export default {
   components: {
     Boton,
   },
-  
+
   data() {
     return {
       vertical: false,
       size: 1,
-      sizeEqual: null,
       aux: 0,
       operando1: null,
       operando2: null,
       operador: "",
       estado: 0,
-      values: [1, 2, 3, "+", 4, 5, 6, "-", 7, 8, 9, "*", 0, "=", "/"],
+      highlight: "highlight",
+      none: "",
+      disable: {
+        disablePlus: false,
+        disableMinus: false,
+        disableBy: false,
+        disableDivide: false,
+        disableEqual: false,
+      },
     };
   },
   created() {
     this.sizeEqual = this.size * 2;
   },
-  mounted() {    
-    document.getElementById("element=")
-      .getElementsByTagName("button")[0].style.width =
-      this.sizeEqual * 45 + 5 + "px";
-      console.log(document.getElementById("element" + "="));
+  mounted() {
     this.blockAllOp();
   },
   methods: {
+    /* eslint-disable */
     onClickBoton(value) {
       if (this.estado === 2) {
         this.aux = 0;
         this.estado = 0;
-        this.operando1 = null;
-        this.operando2 = null;
-        this.blockAllOp();
       }
       if (this.estado === 0) {
-        this.blockAllOp();
         if (Number.isInteger(value)) {
           this.aux = this.aux * 10 + value;
+          if (!this.operando1) this.unblockAllExceptEqual();
           this.operando1 = this.aux;
-          if (this.operando1 / 10 >= 0) {
-            this.unblockAllExceptEqual();
-          }
-        } else if (value !== "=") {
+        } else {
           this.operador = value;
-
           this.estado = 1;
-          this.highlighOp();
-          this.unblockAllExceptEqual();
+
           return 0;
         }
       }
@@ -88,89 +232,62 @@ export default {
             this.aux = 0;
           }
           this.aux = this.aux * 10 + value;
+          this.unblockEqual();
           this.operando2 = this.aux;
-          if (this.operando2 / 10 >= 0) {
-            this.unblockEqual();
-          }
-        } else if (value !== "=") {
-          this.changeHighlightOp();
+        } else if (value != "=") {
           this.operador = value;
-          this.highlighOp();
-          this.unblockAllExceptEqual();
-        }
-        if (value === "=") {
-          this.calcular();
-          this.estado = 2;
-          this.unHighlightOp();
-          this.blockAllOp();
         }
       }
     },
     tilt() {
       this.vertical = !this.vertical;
-      console.log(this.vertical);
     },
     blockAllOp() {
-      for (let item of this.values) {
-        if (!Number.isInteger(item)) {
-          document
-            .getElementById("element" + item)
-            .getElementsByTagName("button")[0].disabled = true;
-        }
+      for (let item in this.disable) {
+        this.disable[item] = true;
       }
     },
 
     unblockAllOp() {
-      for (let item of this.values) {
-        if (!Number.isInteger(item)) {
-          document
-            .getElementById("element" + item)
-            .getElementsByTagName("button")[0].disabled = false;
-        }
+      for (let item in this.disable) {
+        this.disable[item] = false;
       }
-    },
-
-    highlighOp() {
-      let elem = document
-        .getElementById("element" + this.operador)
-        .getElementsByTagName("button")[0];
-      elem.disabled = true;
-      elem.style.backgroundColor = "dodgerblue";
     },
 
     unblockEqual() {
-      document
-        .getElementById("element" + "=")
-        .getElementsByTagName("button")[0].disabled = false;
+      this.disable.disableEqual = false;
     },
-    unHighlightOp() {
-      let elem = document
-        .getElementById("element" + this.operador)
-        .getElementsByTagName("button")[0];
-      elem.style.backgroundColor = "buttonface";
-    },
-    changeHighlightOp() {
-      let elem = document
-        .getElementById("element" + this.operador)
-        .getElementsByTagName("button")[0];
-      elem.disabled = true;
-      elem.style.backgroundColor = "buttonface";
-    },
+
     unblockAllExceptEqual() {
-      for (let item of this.values) {
-        if (!Number.isInteger(item) && item !== "=") {
-          document
-            .getElementById("element" + item)
-            .getElementsByTagName("button")[0].disabled = false;
-        }
+      for (let item in this.disable) {
+        if (item != "disableEqual") this.disable[item] = false;
       }
     },
-    calcular() {
-      this.aux = eval(
+    calcular(value) {
+      /*this.aux = eval(
         `${this.operando1.toString()} ${
           this.operador
         } ${this.operando2.toString()}`
-      );
+      );*/
+      switch (this.operador) {
+        case "+":
+          this.aux = this.operando1 + this.operando2;
+          break;
+        case "-":
+          this.aux = this.operando1 - this.operando2;
+          break;
+        case "*":
+          this.aux = this.operando1 * this.operando2;
+          break;
+        case "/":
+          this.aux = this.operando1 / this.operando2;
+          break;
+      }
+      this.estado = 2;
+      this.operador = "";
+      this.blockAllOp();
+      this.operando1 = null;
+      this.operando2 = null;
     },
   },
 
@@ -184,8 +301,6 @@ export default {
 
 <style scoped>
 .flex-teclado {
-  position: relative;
-
   display: inline-flex;
   justify-content: space-around;
   flex-direction: row;
@@ -194,12 +309,21 @@ export default {
   align-content: space-between;
   background: rgb(30, 30, 77);
 
-  margin: auto;
+  margin: 20px auto;
 }
 
 .btn {
-  margin: 0px;
+  margin: 2px !important;
   flex: 1 1 auto;
   overflow-y: auto;
+}
+.btnEqual {
+  margin: 2px !important;
+  width: 95px !important;
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+.highlight {
+  background-color: dodgerblue;
 }
 </style>

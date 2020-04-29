@@ -1,5 +1,6 @@
 .DS_Store
 node_modules
+backup
 /dist
 
 /tests/e2e/reports/
